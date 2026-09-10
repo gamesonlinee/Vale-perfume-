@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seu Presente ❤️</title>
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    background:
+        radial-gradient(circle at top, #3a1825 0%, #170b11 45%, #080609 100%);
+    font-family: Georgia, "Times New Roman", serif;
+    color: #fff;
+    overflow: hidden;
+}
+.card {
+    width: 100%;
+    max-width: 430px;
+    padding: 45px 28px;
+    text-align: center;
+    border-radius: 28px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.55),
+        inset 0 0 30px rgba(255,255,255,0.03);
+    backdrop-filter: blur(10px);
+    animation: aparecer 1.2s ease;
+}
+.emoji {
+    font-size: 65px;
+    margin-bottom: 20px;
+    animation: flutuar 3s ease-in-out infinite;
+}
+h1 {
+    font-size: 34px;
+    margin-bottom: 18px;
+    font-weight: normal;
+}
+.destaque {
+    font-size: 24px;
+    margin: 20px 0;
+    color: #ffd5df;
+}
+p {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #eee;
+}
+.linha {
+    width: 80px;
+    height: 1px;
+    background: rgba(255,255,255,0.4);
+    margin: 28px auto;
+}
+.assinatura {
+    margin-top: 30px;
+    font-size: 20px;
+    color: #ffd5df;
+}
+.coracao {
+    position: fixed;
+    bottom: -30px;
+    font-size: 18px;
+    opacity: 0.7;
+    animation: subir linear infinite;
+}
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+@keyframes flutuar {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+@keyframes subir {
+    from {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.7;
+    }
+    to {
+        transform: translateY(-110vh) rotate(25deg);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+<body>
+<div class="card">
+    <div class="emoji">💐</div>
+    <h1>Você ganhou um presente!</h1>
+    <div class="linha"></div>
+    <div class="destaque">
+        ❤️ VALE-PERFUME ❤️
+    </div>
+    <p>
+        Este cartão vale
+        <strong>1 perfume à sua escolha.</strong>
+    </p>
+    <p style="margin-top:18px;">
+        Porque você merece aquele
+        cheirinho que eu amo em você. 🥰
+    </p>
+    <div class="linha"></div>
+    <p>
+        14 anos de nós...
+        <br>
+        e ainda tenho muitos presentes
+        para te dar. ❤️
+    </p>
+    <div class="assinatura">
+        Com amor,<br>
+        <strong>Danilo ❤️</strong>
+    </div>
+</div>
+<script>
+function criarCoracao() {
+    const coracao = document.createElement("div");
+    coracao.className = "coracao";
+    coracao.innerHTML = Math.random() > 0.5 ? "❤️" : "♡";
+    coracao.style.left = Math.random() * 100 + "vw";
+    coracao.style.animationDuration = (5 + Math.random() * 5) + "s";
+    coracao.style.fontSize = (14 + Math.random() * 14) + "px";
+    document.body.appendChild(coracao);
+    setTimeout(() => {
+        coracao.remove();
+    }, 10000);
+}
+setInterval(criarCoracao, 700);
+</script>
+</body>
+</html>
