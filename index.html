@@ -3,152 +3,508 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Seu Presente ❤️</title>
+
 <style>
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
+
 body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 25px;
+
     background:
         radial-gradient(circle at top, #3a1825 0%, #170b11 45%, #080609 100%);
+
     font-family: Georgia, "Times New Roman", serif;
     color: #fff;
     overflow: hidden;
 }
+
 .card {
     width: 100%;
     max-width: 430px;
     padding: 45px 28px;
     text-align: center;
+
     border-radius: 28px;
+
     background: rgba(255,255,255,0.07);
+
     border: 1px solid rgba(255,255,255,0.15);
+
     box-shadow:
         0 20px 60px rgba(0,0,0,0.55),
         inset 0 0 30px rgba(255,255,255,0.03);
+
     backdrop-filter: blur(10px);
+
     animation: aparecer 1.2s ease;
 }
+
 .emoji {
     font-size: 65px;
     margin-bottom: 20px;
+
     animation: flutuar 3s ease-in-out infinite;
 }
+
 h1 {
     font-size: 34px;
     margin-bottom: 18px;
     font-weight: normal;
 }
+
 .destaque {
     font-size: 24px;
     margin: 20px 0;
     color: #ffd5df;
 }
+
 p {
     font-size: 18px;
     line-height: 1.7;
     color: #eee;
 }
+
 .linha {
     width: 80px;
     height: 1px;
+
     background: rgba(255,255,255,0.4);
+
     margin: 28px auto;
 }
+
 .assinatura {
     margin-top: 30px;
     font-size: 20px;
     color: #ffd5df;
 }
+
 .coracao {
     position: fixed;
     bottom: -30px;
+
     font-size: 18px;
     opacity: 0.7;
+
     animation: subir linear infinite;
 }
+
+/* BOTÃO DA MÚSICA */
+
+#playMusic {
+    position: fixed;
+
+    bottom: 20px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    padding: 12px 22px;
+
+    border: 1px solid rgba(255,255,255,0.25);
+
+    border-radius: 30px;
+
+    background: rgba(255,255,255,0.10);
+
+    color: white;
+
+    font-family: Georgia, serif;
+
+    font-size: 15px;
+
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+
+    cursor: pointer;
+
+    z-index: 100;
+
+    transition: 0.3s;
+
+    display: none;
+}
+
+#playMusic:hover {
+    background: rgba(255,255,255,0.18);
+}
+
+/* YOUTUBE INVISÍVEL */
+
+#youtubePlayer {
+    position: fixed;
+
+    width: 1px;
+    height: 1px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    left: -100px;
+    top: -100px;
+}
+
 @keyframes aparecer {
+
     from {
         opacity: 0;
         transform: translateY(25px) scale(0.97);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+
 }
+
 @keyframes flutuar {
+
     0%, 100% {
         transform: translateY(0);
     }
+
     50% {
         transform: translateY(-8px);
     }
+
 }
+
 @keyframes subir {
+
     from {
         transform: translateY(0) rotate(0deg);
         opacity: 0;
     }
+
     15% {
         opacity: 0.7;
     }
+
     to {
         transform: translateY(-110vh) rotate(25deg);
         opacity: 0;
     }
+
 }
 </style>
 </head>
+
 <body>
+
 <div class="card">
+
     <div class="emoji">💐</div>
-    <h1>Você ganhou um presente!</h1>
+
+    <h1>
+        Você ganhou um presente!
+    </h1>
+
     <div class="linha"></div>
+
     <div class="destaque">
         ❤️ VALE-PERFUME ❤️
     </div>
+
     <p>
         Este cartão vale
         <strong>1 perfume à sua escolha.</strong>
     </p>
+
     <p style="margin-top:18px;">
         Porque você merece aquele
         cheirinho que eu amo em você. 🥰
     </p>
+
     <div class="linha"></div>
+
     <p>
         14 anos de nós...
         <br>
         e ainda tenho muitos presentes
         para te dar. ❤️
     </p>
+
     <div class="assinatura">
         Com amor,<br>
         <strong>Danilo ❤️</strong>
     </div>
+
 </div>
+
+
+<!-- BOTÃO CASO O CELULAR BLOQUEIE O AUTOPLAY -->
+
+<button id="playMusic">
+    ▶ Tocar nossa música ❤️
+</button>
+
+
+<!-- PLAYER DO YOUTUBE -->
+
+<div id="youtubePlayer"></div>
+
+
 <script>
+
+/* ============================
+   CORAÇÕES
+============================ */
+
 function criarCoracao() {
+
     const coracao = document.createElement("div");
+
     coracao.className = "coracao";
-    coracao.innerHTML = Math.random() > 0.5 ? "❤️" : "♡";
-    coracao.style.left = Math.random() * 100 + "vw";
-    coracao.style.animationDuration = (5 + Math.random() * 5) + "s";
-    coracao.style.fontSize = (14 + Math.random() * 14) + "px";
+
+    coracao.innerHTML =
+        Math.random() > 0.5
+        ? "❤️"
+        : "♡";
+
+    coracao.style.left =
+        Math.random() * 100 + "vw";
+
+    coracao.style.animationDuration =
+        (5 + Math.random() * 5) + "s";
+
+    coracao.style.fontSize =
+        (14 + Math.random() * 14) + "px";
+
     document.body.appendChild(coracao);
+
     setTimeout(() => {
+
         coracao.remove();
+
     }, 10000);
+
 }
+
 setInterval(criarCoracao, 700);
+
+
+/* ============================
+   MÚSICA
+   Balthazar
+   Se Ainda Existe Amor
+============================ */
+
+let player;
+
+const videoId = "crUQamOzv0k";
+
+
+/* CARREGA API DO YOUTUBE */
+
+const tag = document.createElement("script");
+
+tag.src =
+    "https://www.youtube.com/iframe_api";
+
+document.head.appendChild(tag);
+
+
+/* QUANDO YOUTUBE ESTIVER PRONTO */
+
+function onYouTubeIframeAPIReady() {
+
+    player = new YT.Player(
+        "youtubePlayer",
+        {
+
+            height: "1",
+            width: "1",
+
+            videoId: videoId,
+
+            playerVars: {
+
+                autoplay: 1,
+
+                mute: 1,
+
+                controls: 0,
+
+                loop: 1,
+
+                playlist: videoId,
+
+                playsinline: 1,
+
+                rel: 0
+
+            },
+
+            events: {
+
+                onReady: iniciarMusica,
+
+                onStateChange: verificarMusica
+
+            }
+
+        }
+    );
+
+}
+
+
+/* TENTA COMEÇAR AUTOMATICAMENTE */
+
+function iniciarMusica(event) {
+
+    event.target.mute();
+
+    event.target.playVideo();
+
+    /*
+       Depois de iniciar, tenta liberar o áudio.
+       Alguns navegadores permitem.
+    */
+
+    setTimeout(() => {
+
+        try {
+
+            event.target.unMute();
+
+            event.target.setVolume(70);
+
+        } catch (e) {
+
+        }
+
+    }, 800);
+
+}
+
+
+/* VERIFICA SE O VÍDEO ESTÁ TOCANDO */
+
+function verificarMusica(event) {
+
+    if (
+        event.data === YT.PlayerState.PLAYING
+    ) {
+
+        document.getElementById(
+            "playMusic"
+        ).style.display = "none";
+
+    }
+
+}
+
+
+/* BOTÃO MANUAL */
+
+document
+.getElementById("playMusic")
+.addEventListener("click", function() {
+
+    if (!player) return;
+
+    player.unMute();
+
+    player.setVolume(80);
+
+    player.playVideo();
+
+    this.style.display = "none";
+
+});
+
+
+/*
+   QUALQUER TOQUE NA PÁGINA
+   TENTA LIBERAR O ÁUDIO
+
+   Isso é especialmente importante
+   no iPhone.
+*/
+
+document.addEventListener(
+    "click",
+    function liberarAudio() {
+
+        if (!player) return;
+
+        try {
+
+            player.unMute();
+
+            player.setVolume(80);
+
+            player.playVideo();
+
+            document.getElementById(
+                "playMusic"
+            ).style.display = "none";
+
+        } catch (e) {
+
+        }
+
+    },
+    { once: true }
+);
+
+
+/*
+   Depois de alguns segundos,
+   se não estiver tocando,
+   mostra o botão.
+*/
+
+setTimeout(() => {
+
+    if (!player) {
+
+        document.getElementById(
+            "playMusic"
+        ).style.display = "block";
+
+        return;
+
+    }
+
+    try {
+
+        if (
+            player.getPlayerState() !==
+            YT.PlayerState.PLAYING
+        ) {
+
+            document.getElementById(
+                "playMusic"
+            ).style.display = "block";
+
+        }
+
+    } catch (e) {
+
+        document.getElementById(
+            "playMusic"
+        ).style.display = "block";
+
+    }
+
+}, 2500);
+
 </script>
+
 </body>
 </html>
