@@ -99,7 +99,10 @@ p {
     animation: subir linear infinite;
 }
 
-/* BOTÃO DA MÚSICA */
+
+/* ============================
+   BOTÃO DA MÚSICA
+============================ */
 
 #playMusic {
     position: fixed;
@@ -140,7 +143,10 @@ p {
     background: rgba(255,255,255,0.18);
 }
 
-/* YOUTUBE INVISÍVEL */
+
+/* ============================
+   YOUTUBE INVISÍVEL
+============================ */
 
 #youtubePlayer {
     position: fixed;
@@ -156,6 +162,7 @@ p {
     top: -100px;
 }
 
+
 @keyframes aparecer {
 
     from {
@@ -170,6 +177,7 @@ p {
 
 }
 
+
 @keyframes flutuar {
 
     0%, 100% {
@@ -181,6 +189,7 @@ p {
     }
 
 }
+
 
 @keyframes subir {
 
@@ -203,6 +212,7 @@ p {
 </head>
 
 <body>
+
 
 <div class="card">
 
@@ -298,16 +308,26 @@ setInterval(criarCoracao, 700);
 
 /* ============================
    MÚSICA
-   Balthazar
-   Se Ainda Existe Amor
+   Jorge & Mateus
+   A Hora É Agora
+   Ao Vivo em Jurerê - 2012
 ============================ */
 
 let player;
 
-const videoId = "crUQamOzv0k";
+let musicaPronta = false;
+
+let musicaTocando = false;
 
 
-/* CARREGA API DO YOUTUBE */
+/* ID DO VÍDEO OFICIAL */
+
+const videoId = "P8nYqA3NyIc";
+
+
+/* ============================
+   CARREGA API DO YOUTUBE
+============================ */
 
 const tag = document.createElement("script");
 
@@ -317,7 +337,9 @@ tag.src =
 document.head.appendChild(tag);
 
 
-/* QUANDO YOUTUBE ESTIVER PRONTO */
+/* ============================
+   YOUTUBE PRONTO
+============================ */
 
 function onYouTubeIframeAPIReady() {
 
@@ -326,6 +348,7 @@ function onYouTubeIframeAPIReady() {
         {
 
             height: "1",
+
             width: "1",
 
             videoId: videoId,
@@ -333,8 +356,6 @@ function onYouTubeIframeAPIReady() {
             playerVars: {
 
                 autoplay: 1,
-
-                mute: 1,
 
                 controls: 0,
 
@@ -344,15 +365,39 @@ function onYouTubeIframeAPIReady() {
 
                 playsinline: 1,
 
-                rel: 0
+                rel: 0,
+
+                modestbranding: 1
 
             },
 
             events: {
 
-                onReady: iniciarMusica,
+                onReady: function(event) {
 
-                onStateChange: verificarMusica
+                    musicaPronta = true;
+
+                    /*
+                    Tenta iniciar imediatamente
+                    com áudio.
+                    */
+
+                    try {
+
+                        event.target.setVolume(80);
+
+                        event.target.unMute();
+
+                        event.target.playVideo();
+
+                    } catch (e) {
+
+                    }
+
+                },
+
+                onStateChange:
+                    verificarMusica
 
             }
 
@@ -362,43 +407,18 @@ function onYouTubeIframeAPIReady() {
 }
 
 
-/* TENTA COMEÇAR AUTOMATICAMENTE */
-
-function iniciarMusica(event) {
-
-    event.target.mute();
-
-    event.target.playVideo();
-
-    /*
-       Depois de iniciar, tenta liberar o áudio.
-       Alguns navegadores permitem.
-    */
-
-    setTimeout(() => {
-
-        try {
-
-            event.target.unMute();
-
-            event.target.setVolume(70);
-
-        } catch (e) {
-
-        }
-
-    }, 800);
-
-}
-
-
-/* VERIFICA SE O VÍDEO ESTÁ TOCANDO */
+/* ============================
+   VERIFICA ESTADO DA MÚSICA
+============================ */
 
 function verificarMusica(event) {
 
     if (
-        event.data === YT.PlayerState.PLAYING
+        event.data ===
+        YT.PlayerState.PLAYING
     ) {
+
+        musicaTocando = true;
 
         document.getElementById(
             "playMusic"
@@ -406,35 +426,74 @@ function verificarMusica(event) {
 
     }
 
+
+    /*
+    Se o YouTube estiver bloqueado,
+    o botão aparece.
+    */
+
+    if (
+        event.data ===
+        YT.PlayerState.PAUSED
+    ) {
+
+        musicaTocando = false;
+
+    }
+
+
+    /*
+    Quando terminar, reinicia.
+    */
+
+    if (
+        event.data ===
+        YT.PlayerState.ENDED
+    ) {
+
+        event.target.playVideo();
+
+    }
+
 }
 
 
-/* BOTÃO MANUAL */
+/* ============================
+   BOTÃO MANUAL
+============================ */
 
 document
 .getElementById("playMusic")
-.addEventListener("click", function() {
+.addEventListener(
+    "click",
+    function() {
 
-    if (!player) return;
+        if (!player) return;
 
-    player.unMute();
+        try {
 
-    player.setVolume(80);
+            player.unMute();
 
-    player.playVideo();
+            player.setVolume(80);
 
-    this.style.display = "none";
+            player.playVideo();
 
-});
+            musicaTocando = true;
+
+            this.style.display = "none";
+
+        } catch (e) {
+
+        }
+
+    }
+);
 
 
-/*
+/* ============================
    QUALQUER TOQUE NA PÁGINA
-   TENTA LIBERAR O ÁUDIO
-
-   Isso é especialmente importante
-   no iPhone.
-*/
+   LIBERA O ÁUDIO
+============================ */
 
 document.addEventListener(
     "click",
@@ -450,6 +509,8 @@ document.addEventListener(
 
             player.playVideo();
 
+            musicaTocando = true;
+
             document.getElementById(
                 "playMusic"
             ).style.display = "none";
@@ -463,11 +524,9 @@ document.addEventListener(
 );
 
 
-/*
-   Depois de alguns segundos,
-   se não estiver tocando,
-   mostra o botão.
-*/
+/* ============================
+   VERIFICA APÓS 3 SEGUNDOS
+============================ */
 
 setTimeout(() => {
 
@@ -483,8 +542,11 @@ setTimeout(() => {
 
     try {
 
+        const estado =
+            player.getPlayerState();
+
         if (
-            player.getPlayerState() !==
+            estado !==
             YT.PlayerState.PLAYING
         ) {
 
@@ -502,7 +564,7 @@ setTimeout(() => {
 
     }
 
-}, 2500);
+}, 3000);
 
 </script>
 
