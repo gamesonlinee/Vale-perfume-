@@ -1,114 +1,269 @@
-/* ============================
-   CORAÇÕES
-============================ */
-function criarCoracao() {
-    const coracao = document.createElement("div");
-    coracao.className = "coracao";
-    coracao.innerHTML =
-        Math.random() > 0.5
-        ? "❤️"
-        : "♡";
-    coracao.style.left =
-        Math.random() * 100 + "vw";
-    coracao.style.animationDuration =
-        (5 + Math.random() * 5) + "s";
-    coracao.style.fontSize =
-        (14 + Math.random() * 14) + "px";
-    document.body.appendChild(coracao);
-    setTimeout(() => {
-        coracao.remove();
-    }, 10000);
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Vale-Perfume ❤️</title>
+
+<style>
+* {
+    box-sizing: border-box;
 }
-setInterval(criarCoracao, 700);
-/* ============================
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #3a1825, #170b11 55%, #080609);
+    overflow: hidden;
+    color: white;
+}
+
+.card {
+    width: 90%;
+    max-width: 430px;
+    padding: 35px 25px;
+    text-align: center;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    backdrop-filter: blur(12px);
+    position: relative;
+    z-index: 2;
+}
+
+.emoji {
+    font-size: 65px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    margin: 0 0 20px;
+    font-size: 28px;
+}
+
+.highlight {
+    display: inline-block;
+    padding: 12px 18px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.1);
+    font-size: 22px;
+    font-weight: bold;
+}
+
+p {
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 12px 0;
+}
+
+.signature {
+    margin-top: 25px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#playMusic {
+    display: block;
+    width: 100%;
+    margin-top: 25px;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 14px;
+    background: #ffffff;
+    color: #6d1d38;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+}
+
+#playMusic:active {
+    transform: scale(0.98);
+}
+
+#youtubePlayer {
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    left: -10px;
+    bottom: -10px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.heart {
+    position: fixed;
+    bottom: -30px;
+    font-size: 20px;
+    animation: subir 5s linear forwards;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes subir {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-110vh) scale(1.5);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <div class="emoji">💐</div>
+
+    <h1>Você ganhou um presente!</h1>
+
+    <div class="highlight">
+        ❤️ VALE-PERFUME ❤️
+    </div>
+
+    <p>
+        Este cartão vale <strong>1 perfume</strong> à sua escolha.
+    </p>
+
+    <p>
+        Porque você merece aquele cheirinho que eu amo em você. 🥰
+    </p>
+
+    <p>
+        14 anos de nós... e ainda tenho muitos presentes para te dar. ❤️
+    </p>
+
+    <div class="signature">
+        Com amor, Danilo ❤️
+    </div>
+
+    <button id="playMusic">
+        ▶ Tocar nossa música ❤️
+    </button>
+
+</div>
+
+<div id="youtubePlayer"></div>
+
+<script>
+/* ==============================
    MÚSICA
    Jorge & Mateus
-   A Hora É Agora
-============================ */
-let player = null;
-/* ID DO VÍDEO */
+   A Hora É Agora (Ao Vivo)
+   ============================== */
+
 const videoId = "P8nYqA3NyIc";
-/* ============================
-   CARREGA API DO YOUTUBE
-============================ */
+
+let player = null;
+let apiReady = false;
+
+const button = document.getElementById("playMusic");
+
+/* Carrega API do YouTube */
 const tag = document.createElement("script");
 tag.src = "https://www.youtube.com/iframe_api";
 document.head.appendChild(tag);
-/* ============================
-   QUANDO YOUTUBE ESTIVER PRONTO
-============================ */
+
+/* YouTube chama esta função quando estiver pronto */
 function onYouTubeIframeAPIReady() {
+
+    apiReady = true;
+
     player = new YT.Player("youtubePlayer", {
         height: "1",
         width: "1",
+
         videoId: videoId,
+
         playerVars: {
             autoplay: 0,
             controls: 0,
             loop: 1,
             playlist: videoId,
             playsinline: 1,
-            rel: 0
+            rel: 0,
+            modestbranding: 1
         },
+
         events: {
             onReady: function() {
-                /*
-                O botão fica disponível.
-                A música só começa quando
-                a pessoa tocar nele.
-                */
-                document.getElementById(
-                    "playMusic"
-                ).style.display = "block";
+                button.style.display = "block";
             },
+
             onStateChange: function(event) {
-                if (
-                    event.data ===
-                    YT.PlayerState.PLAYING
-                ) {
-                    document.getElementById(
-                        "playMusic"
-                    ).innerHTML =
-                        "🎵 Nossa música está tocando ❤️";
-                    setTimeout(() => {
-                        document.getElementById(
-                            "playMusic"
-                        ).style.display = "none";
-                    }, 1200);
+
+                if (event.data === YT.PlayerState.PLAYING) {
+                    button.innerHTML = "🎵 Nossa música está tocando ❤️";
+                }
+
+                if (event.data === YT.PlayerState.PAUSED) {
+                    button.innerHTML = "▶ Continuar nossa música ❤️";
+                }
+
+                if (event.data === YT.PlayerState.ENDED) {
+                    button.innerHTML = "▶ Tocar nossa música ❤️";
                 }
             }
         }
     });
 }
-/* ============================
-   BOTÃO
-   TOCAR NOSSA MÚSICA
-============================ */
-document
-.getElementById("playMusic")
-.addEventListener("click", function() {
+
+/* Clique do usuário inicia a música */
+button.addEventListener("click", function() {
+
     if (!player) {
+        button.innerHTML = "⏳ Carregando música...";
         return;
     }
-    try {
-        /*
-        Libera o áudio
-        */
-        player.unMute();
-        player.setVolume(100);
-        /*
-        Começa a música
-        */
-        player.playVideo();
-        /*
-        Muda o texto do botão
-        */
-        this.innerHTML =
-            "🎵 Nossa música está tocando ❤️";
-    } catch (erro) {
-        console.log(
-            "Não foi possível iniciar a música:",
-            erro
-        );
-    }
+
+    player.unMute();
+    player.setVolume(100);
+    player.playVideo();
+
+    button.innerHTML = "🎵 Nossa música está tocando ❤️";
 });
+
+
+/* ==============================
+   CORAÇÕES FLUTUANDO
+   ============================== */
+
+function criarCoracao() {
+
+    const heart = document.createElement("div");
+
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (14 + Math.random() * 18) + "px";
+    heart.style.animationDuration = (4 + Math.random() * 3) + "s";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 7000);
+}
+
+setInterval(criarCoracao, 700);
+</script>
+
+</body>
+</html>
